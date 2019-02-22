@@ -1,0 +1,49 @@
+Pcp_File_Version=4
+*** BLOCK A: BASIC INFORMATION *****************************************
+Heading
+Welcome to HYDRUS
+LUnit  TUnit  MUnit  (indicated units are obligatory for all input data)
+cm
+hours
+mmol
+Kat (0:horizontal plane, 1:axisymmetric vertical flow, 2:vertical plane)
+  2
+MaxIt   TolTh   TolH InitH/W  (max. number of iterations and tolerances)
+ 100    0.001      1     f
+lWat lChem lSink Short Inter lScrn AtmIn lTemp lWTDep lEquil lExtGen lInv
+ t     t     f     f     f    t     f     f     f      t      t      f
+lUnsatCh lCFSTr   lHP2   m_lActRSU lDummy  lDummy  lDummy
+ f       f       f       f       f       f       f
+ PrintStep  PrintInterval lEnter
+         1              0       t
+*** BLOCK B: MATERIAL INFORMATION **************************************
+NMat    NLay    hTab1   hTabN     NAniz
+  1       1    0.0001   10000
+    Model   Hysteresis
+      0          0
+  thr    ths   Alfa     n         Ks      l
+ 0.046   0.44  0.146   2.69       29.8    0.6 
+*** BLOCK C: TIME INFORMATION ******************************************
+        dt       dtMin       dtMax     DMul    DMul2  ItMin ItMax  MPL
+     0.0024     0.00024        0.12     1.3     0.7     3     7    10
+      tInit        tMax
+          0          12
+TPrint(1),TPrint(2),...,TPrint(MPL)
+        0.5           1         1.5           2           3           5 
+          7         9.6        10.8          12 
+*** BLOCK D: SOLUTE TRANSPORT INFORMATION *****************************************************
+ Epsi  lUpW  lArtD lTDep    cTolA    cTolR   MaxItC    PeCr  Nu.ofSolutes Tortuosity Bacter Filtration
+  0.5     f     t     f         0         0     1        2        1         t         f         f
+   lWatDep    lInitM   lInitEq    lTortM    lFumigant lDummy    lDummy    lDummy    lDummy    lDummy    lDummy
+         f         f         f         f         f         f         f         f         f         f         f
+     Bulk.d.     DisperL.      DisperT     Frac      ThImob (1..NMat)
+        1.6         0.6          11           1           0 
+         DifW       DifG                n-th solute
+          6           0 
+         Ks          Nu        Beta       Henry       SnkL1       SnkS1       SnkG1       SnkL1'      SnkS1'      SnkG1'      SnkL0       SnkS0       SnkG0        Alfa
+          0           0           1           0        0.09           0           0           0           0           0           0           0           0           0 
+       cTop        cBot
+          0         1.1           0           0           0           0           0           0           0 
+      tPulse
+         24
+*** END OF INPUT FILE 'SELECTOR.IN' ************************************

@@ -1,0 +1,30 @@
+Pcp_File_Version=4
+*** BLOCK J: BOUNDARY INFORMATION *********************************************
+    NumBP     NObs  SeepF  FreeD DrainF  qQWLF
+       50        0      f      t      f      f
+ Interp H/Flux H/Flx1  Atm/H Seep/H Atm/WL Atm/SF   Snow
+      f      f      f      f      f      f      f      f
+Gradient SubDrip SurfDrip SeepFace TriggIrrig
+      f      f      f      f        f          f      f      f
+Node Number Array
+      1       4      44      45      46      47      48      49      50      51 
+     52      53      54      55      56      57      58      59      60      61 
+     62      63      64      65      66      67     107     108     109     110 
+    111     112     113     114     115     116     117     118     119     120 
+    121     122     123     124     125     126     127     128     129     130 
+Width Array
+      1       1       1       2       2       2       2       2       2       2 
+      2       2       2       2       2       2       2       2       2       2 
+      2       2       2       2       2       1       2       2       2       2 
+      2       2       2       2       2       2       2       2       2       2 
+      2       2       2       2       2       2       2       2       2       2 
+Length of soil surface associated with transpiration
+              0
+Number of Flowing points and their indeces
+    0
+*** BLOCK J-D: Solute transport boundary conditions *****************************
+KodCB(1),KodCB(2),.....,KodCB(NumBP)
+ -1  -1   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2   2 
+  2   2   2   2   2   2  -1  -1  -1  -1  -1  -1  -1  -1  -1  -1  -1  -1  -1  -1 
+ -1  -1  -1  -1  -1  -1  -1  -1  -1  -1 
+*** End of input file 'BOUNDARY.IN' *******************************************
