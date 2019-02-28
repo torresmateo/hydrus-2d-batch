@@ -37,13 +37,13 @@ TPrint(1),TPrint(2),...,TPrint(MPL)
    lWatDep    lInitM   lInitEq    lTortM    lFumigant lDummy    lDummy    lDummy    lDummy    lDummy    lDummy
          f         f         f         f         f         f         f         f         f         f         f
      Bulk.d.     DisperL.      DisperT     Frac      ThImob (1..NMat)
-        1.6         0.6          11           1           0 
+{Bulk_d:>11} {DisperL:>11} {DisperT:>11}           1           0
          DifW       DifG                n-th solute
-          6           0 
+{DifW:>11}           0
          Ks          Nu        Beta       Henry       SnkL1       SnkS1       SnkG1       SnkL1'      SnkS1'      SnkG1'      SnkL0       SnkS0       SnkG0        Alfa
-          0           0           1           0        0.09           0           0           0           0           0           0           0           0           0 
+          0           0           1           0 {SnkL1:>11}           0           0           0           0           0           0           0           0           0
        cTop        cBot
-          0         1.1           0           0           0           0           0           0           0 
+          0         1.1           0           0           0           0           0           0           0
       tPulse
          24
 *** END OF INPUT FILE 'SELECTOR.IN' ************************************

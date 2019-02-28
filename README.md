@@ -17,10 +17,10 @@ At the moment, this script only supports the variables listed in the script, and
 To run the script, run the following command from the directory containing the `create_projects.py` script
 
 ```bash
-python create_projects.py --od G:\programming\hydrus --sp G:\programming --r ranges_sample.csv
+python create_projects.py --od G:\programming\hydrus --r ranges_sample.csv
 ```
 
-here, we're assuming that `G:\programming\hydrus` is empty, `G:\programming\` contains the `CROMO` project and `ranges_sample.csv` determines which configurations will be created and its located in the same folder than the `create_projects.py` file.
+here, we're assuming that `G:\programming\hydrus` is empty, and `ranges_sample.csv` determines which configurations will be created and its located in the same folder than the `create_projects.py` file.
 
 If successfully done, `G:\programming\hydrus` will contain several HYDRUS projects based on the CROMO project, with the configurations detailed in `G:\programming\hydrus\configurations.txt`
 
