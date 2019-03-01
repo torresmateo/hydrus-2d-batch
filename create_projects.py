@@ -4,6 +4,7 @@ import numpy as np
 import itertools
 import argparse
 import os
+import json
 
 aparser = argparse.ArgumentParser()
 required_arguments = aparser.add_argument_group('required arguments')
@@ -46,7 +47,7 @@ template = {
 }
 
 
-configuration_details = ""
+configuration_details = {}
 
 for e, configuration in enumerate(itertools.product(*[data[k] for k in supported_variables])):
     print(f'Writing configuration {e}')
@@ -64,12 +65,12 @@ for e, configuration in enumerate(itertools.product(*[data[k] for k in supported
     domain.write(template['CROMO']['domain'].format(**{x: y for x, y in zip(supported_variables, configuration)}))
     domain.close()
     
+    configuration_details[f'configuration_{e}'] = {x: y for x, y in zip(supported_variables, configuration)}
 
-    configuration_details += f'configuration {e} : ' + \
-                             str({x: y for x, y in zip(supported_variables, configuration)}) + '\n'
+    if e >= 10:
+        break
 
-configurations = open(os.path.join(out_dir, 'configurations.txt'), 'w')
-configurations.write(configuration_details)
-configurations.close()
+with open(os.path.join(out_dir, 'configurations.json'), 'w') as outfile:
+    json.dump(configuration_details, outfile)
 
 
