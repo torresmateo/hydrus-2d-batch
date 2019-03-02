@@ -51,7 +51,7 @@ configuration_details = {}
 
 for e, configuration in enumerate(itertools.product(*[data[k] for k in supported_variables])):
     print(f'Writing configuration {e}')
-    config_dir = os.path.join(out_dir, f'configuration_{e}\\')
+    config_dir = os.path.join(out_dir, f'configuration_{e}')
     if os.name == 'nt':
         os.system(f'xcopy /E {os.path.join(proj_dir,"CROMO","PRE")} {config_dir}')
     else:
