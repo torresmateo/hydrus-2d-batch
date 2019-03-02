@@ -67,9 +67,6 @@ for e, configuration in enumerate(itertools.product(*[data[k] for k in supported
     
     configuration_details[f'configuration_{e}'] = {x: y for x, y in zip(supported_variables, configuration)}
 
-    if e >= 10:
-        break
-
 with open(os.path.join(out_dir, 'configurations.json'), 'w') as outfile:
     json.dump(configuration_details, outfile)
 
