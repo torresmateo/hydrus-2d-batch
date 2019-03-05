@@ -32,11 +32,13 @@ If successfully done, `G:\programming\hydrus` will contain several HYDRUS projec
 
 ### `ranges.csv`
 
-The file must contain `start`, `stop`, and `step` values for every variable. This will be used to generate values for each variable with a range that goes from `start` to `stop` (non-inclusive) increasing the value by `step`. Some examples below:
+The file must contain `start`, `stop`, `step`, and `default` values for every variable. This will be used to generate values for each variable with a range that goes from `start` to `stop` (non-inclusive) increasing the value by `step`. Some examples below:
 
 * `a,1,10,1` generates values `1 2 3 4 5 6 7 8 9` for variable `a`
 * `a,1,10,3` generates values `1 4 7` for variable `a`
 * `a,0.1,0.5,0.1` generates values `0.1 0.2 0.3 0.4` for variable `a`
+
+The `default` value will be used when the variable is not beign analysed.
 
 ### How to run all the configurations in HYDRUS2D 
 
@@ -64,3 +66,4 @@ python aggregate_results.py --rd G:\programming\hydrus
 2 files will be created: 
 * `results.pkl` containing a pandas DataFrame for easy analysis with python
 * `results.xlsx` The same data in Microsoft Excel format.
+* `res.mat` The same data in MATLAB format. Please refer to the `plots.m` script for examples on how to use this data.

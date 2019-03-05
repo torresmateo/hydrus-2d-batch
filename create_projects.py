@@ -6,6 +6,8 @@ import argparse
 import os
 import json
 
+from collections import defaultdict
+
 aparser = argparse.ArgumentParser()
 required_arguments = aparser.add_argument_group('required arguments')
 required_arguments.add_argument('--output-dir', '--od',
@@ -35,9 +37,12 @@ ranges = pd.read_csv(args.ranges)
 supported_variables = ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h']
 
 data = {}
-
+defaults = {}
 for _, r in ranges.iterrows():
     data[r.variable] = list(np.arange(r.start, r.stop, r.step))
+    defaults[r.variable] = r.default
+
+print(data)
 
 template = {
     'CROMO': {
@@ -47,25 +52,30 @@ template = {
 }
 
 
-configuration_details = {}
+configuration_details = defaultdict(dict)
 
-for e, configuration in enumerate(itertools.product(*[data[k] for k in supported_variables])):
-    print(f'Writing configuration {e}')
-    config_dir = os.path.join(out_dir, f'configuration_{e}')
-    if os.name == 'nt':
-        os.system(f'xcopy /E {os.path.join(proj_dir,"CROMO","PRE")} {config_dir}')
-    else:
-        os.system(f'cp -rf {os.path.join(proj_dir, "CROMO", "PRE")} {config_dir}')
-    
-    selector = open(os.path.join(config_dir, 'SELECTOR.IN'), 'w')
-    selector.write(template['CROMO']['selector'].format(**{x: y for x, y in zip(supported_variables, configuration)}))
-    selector.close()
-    
-    domain = open(os.path.join(config_dir, 'DOMAIN.DAT'), 'w')
-    domain.write(template['CROMO']['domain'].format(**{x: y for x, y in zip(supported_variables, configuration)}))
-    domain.close()
-    
-    configuration_details[f'configuration_{e}'] = {x: y for x, y in zip(supported_variables, configuration)}
+e = 0
+for var in supported_variables:
+    configuration = defaults.copy()
+    for val in data[var]:
+        configuration[var] = val
+        print(f'Writing configuration {e}')
+        config_dir = os.path.join(out_dir, f'configuration_{e}')
+        if os.name == 'nt':
+            os.system(f'xcopy /E {os.path.join(proj_dir,"CROMO","PRE")} {config_dir}\\ > nul')
+        else:
+            os.system(f'cp -rf {os.path.join(proj_dir, "CROMO", "PRE")} {config_dir}')
+        
+        selector = open(os.path.join(config_dir, 'SELECTOR.IN'), 'w')
+        selector.write(template['CROMO']['selector'].format(**configuration))
+        selector.close()
+        
+        domain = open(os.path.join(config_dir, 'DOMAIN.DAT'), 'w')
+        domain.write(template['CROMO']['domain'].format(**configuration))
+        domain.close()
+        
+        configuration_details[var][f'configuration_{e}'] = configuration.copy()
+        e += 1
 
 with open(os.path.join(out_dir, 'configurations.json'), 'w') as outfile:
     json.dump(configuration_details, outfile)
