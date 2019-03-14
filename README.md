@@ -23,12 +23,18 @@ At the moment, this script only supports the variables listed in the script, and
 To run the script, run the following command from the directory containing the `create_projects.py` script
 
 ```bash
-python create_projects.py --od G:\programming\hydrus --r ranges_sample.csv
+python create_projects.py -od G:\programming\hydrus -r ranges_sample.csv -m discrete
 ```
 
-here, we're assuming that `G:\programming\hydrus` is empty, and `ranges_sample.csv` determines which configurations will be created and its located in the same folder than the `create_projects.py` file.
+here, we're assuming that `G:\programming\hydrus` is empty, and `ranges_sample.csv` determines which configurations will be created and its located in the same folder than the `create_projects.py` file. The `-m` argument refers to whether the simulations will follow a Monte Carlo sampling procedure or not. The example above describes a 'discrete' approach, for a Monte Carlo sampling run:
 
-If successfully done, `G:\programming\hydrus` will contain several HYDRUS projects based on the CROMO project, with the configurations detailed in `G:\programming\hydrus\configurations.txt`
+```bash
+python create_projects.py -od G:\programming\hydrus -r ranges_sample.csv -m montecarlo -n 1000
+```
+
+This adds the `-n` argument, which indicates the number of configurations to be sampled. 
+
+If successfully done, `G:\programming\hydrus` will contain several HYDRUS projects based on the CROMO project, with the configurations detailed in `G:\programming\hydrus\configurations.json`
 
 ### `ranges.csv`
 
@@ -38,7 +44,9 @@ The file must contain `start`, `stop`, `step`, and `default` values for every va
 * `a,1,10,3` generates values `1 4 7` for variable `a`
 * `a,0.1,0.5,0.1` generates values `0.1 0.2 0.3 0.4` for variable `a`
 
-The `default` value will be used when the variable is not beign analysed.
+The `default` value will be used when the variable is not being analysed. This will generate files that allow the results to be grouped by analysed variable afterwards.
+
+If `montecarlo` is used as the mode, only values set in `start` and `stop` will be considered, and values in the open interval `[start, stop)`. Results will not be grouped by variable by the results aggregation script. For more details on the sampling, please read [numpy's uniform distribution documentation](https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.uniform.html#numpy.random.uniform).
 
 ### How to run all the configurations in HYDRUS2D 
 
@@ -60,7 +68,7 @@ This script will extract the `CumCh1` variable from the `solute1.out` output fil
 You simply need to run the following command
 
 ```bash
-python aggregate_results.py --rd G:\programming\hydrus
+python aggregate_results.py -rd G:\programming\hydrus
 ```
 
 2 files will be created: 
