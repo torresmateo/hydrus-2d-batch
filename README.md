@@ -68,8 +68,10 @@ This script will extract the `CumCh1` variable from the `solute1.out` output fil
 You simply need to run the following command
 
 ```bash
-python aggregate_results.py -rd G:\programming\hydrus
+python aggregate_results.py -rd G:\programming\hydrus -m 10
 ```
+
+here the `m` parameter is the number of simulations to consider for the generation of a distribution estimation plot, in the example above, the first estimation will consider the first 10 simulations, the second estimation will consider the first 20, and subsequent estimations will increase the number of simulations that are considered. This should help to visualise the convergence of the system. 
 
 2 files will be created: 
 * `results.pkl` containing a pandas DataFrame for easy analysis with python

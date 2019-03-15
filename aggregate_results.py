@@ -4,6 +4,10 @@ import sys
 import json
 import pandas as pd
 import scipy.io
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import seaborn as sns
 from SoluteParser import SoluteParser
 
 
@@ -12,6 +16,8 @@ required_arguments = aparser.add_argument_group('required arguments')
 required_arguments.add_argument('--results-dir', '-rd',
                                 help='path to the directory containing all the configurations. Results will be stored '
                                      'in that directory', required=True)
+required_arguments.add_argument('--estimator-step', '-m',
+                                help='number of simulations to consider for the plot', required=True, type=int)
 args = aparser.parse_args()
 
 res_dir = os.path.realpath(args.results_dir)
@@ -70,3 +76,16 @@ print(f'saving excel file...')
 df.to_excel(os.path.join(res_dir, 'results.xlsx'))
 print(f'saving MATLAB file...')
 scipy.io.savemat(os.path.join(res_dir, 'res.mat'), mdict={'res':df.values[:,:9], 'other':df.values[:,9:]})
+
+print('creating distribution estimation figure')
+idx = df.groupby(['configuration'])['t'].transform(max) == df['t']
+cumchs = df[idx].CumCh1.values
+n = args.estimator_step
+fig, ax = plt.subplots(figsize=(10,10))
+for i in range(cumchs.shape[0]//n):
+    print(cumchs[:n*i+n].shape)
+    sns.distplot(cumchs[:n*i+n], ax=ax, hist=True, label=f'{i*n+n}')
+fig.legend()
+plt.savefig(os.path.join(res_dir, 'distributions.png'))
+plt.savefig(os.path.join(res_dir, 'distributions.svg'))
+
