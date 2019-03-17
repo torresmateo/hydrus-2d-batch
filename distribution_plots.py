@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
@@ -18,18 +19,20 @@ res_dir = os.path.realpath(args.pickle_dir)
 
 results = None
 for e, res in enumerate(os.listdir(res_dir)):
-    print(e)
-    if results is None:
-        results = pd.read_pickle(os.path.join(res_dir,res))
-        idx = results.groupby(['configuration'])['t'].transform(max) == results['t']
-        results = results[idx]
-        results.configuration = results.configuration.astype(str) + f' {e}'
-    else:
-        df = pd.read_pickle(os.path.join(res_dir,res))
-        idx = df.groupby(['configuration'])['t'].transform(max) == df['t']
-        df = df[idx]
-        df.configuration = df.configuration.astype(str) + f' x{e}'
-        results = results.append(df)
+    if res.endswith('.pkl'):
+        print(f'reading file: {res}')
+        if results is None:
+            results = pd.read_pickle(os.path.join(res_dir,res))
+            idx = results.groupby(['configuration'])['t'].transform(max) == results['t']
+            results = results[idx]
+            results.configuration = results.configuration.astype(str) + f' {e}'
+        else:
+            df = pd.read_pickle(os.path.join(res_dir,res))
+            idx = df.groupby(['configuration'])['t'].transform(max) == df['t']
+            df = df[idx]
+            df.configuration = df.configuration.astype(str) + f' x{e}'
+            results = results.append(df)
+print('generating images...')
 
 cumchs = results.CumCh1.values
 n = args.estimator_step

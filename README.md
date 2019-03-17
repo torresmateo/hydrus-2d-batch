@@ -73,7 +73,17 @@ python aggregate_results.py -rd G:\programming\hydrus -m 10
 
 here the `m` parameter is the number of simulations to consider for the generation of a distribution estimation plot, in the example above, the first estimation will consider the first 10 simulations, the second estimation will consider the first 20, and subsequent estimations will increase the number of simulations that are considered. This should help to visualise the convergence of the system. 
 
-2 files will be created: 
+3 files will be created: 
 * `results.pkl` containing a pandas DataFrame for easy analysis with python
 * `results.xlsx` The same data in Microsoft Excel format.
 * `res.mat` The same data in MATLAB format. Please refer to the `plots.m` script for examples on how to use this data.
+
+## analyse many results
+
+When running the pipeline in `montecarlo` mode, it makes sense to split the computation in many batches. To make the analysis of many thousans of simulations manageable, a script that looks at how the ditribution of the `CumCh1` variable evolves is provided. To run it, use the following command:
+
+```bash
+python distribution_plots.py -pd G:\programming\hydrus\results -m 10
+```
+
+The first argument points to the directory which should contain all the `results.pkl` generated from many runs of the `aggregate_results.py` script. 
