@@ -1,0 +1,1 @@
+echo "simulations:" $(ls configuration_*/solute1.out | wc -l); echo "percentage:" $(bc -l <<< "scale=4; $(ls configuration_*/solute1.out | wc -l)/$(ls -d configuration_* | wc -l)*100")
