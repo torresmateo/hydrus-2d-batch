@@ -66,7 +66,7 @@ modefile.close()
 print('reading ranges...')
 ranges = pd.read_csv(args.ranges)
 
-supported_variables = ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h']
+supported_variables = ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h', 'ths', 'Ks', 'l']
 
 data = {}
 defaults = {}

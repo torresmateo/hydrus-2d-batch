@@ -22,7 +22,7 @@ args = aparser.parse_args()
 
 res_dir = os.path.realpath(args.results_dir)
 
-supported_variables = ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h']
+supported_variables = ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h', 'ths', 'Ks', 'l']
 
 with open(os.path.join(res_dir, 'mode.txt')) as modefile:
     mode = modefile.read().strip()
