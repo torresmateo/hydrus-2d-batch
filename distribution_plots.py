@@ -58,6 +58,22 @@ plt.savefig(os.path.join(res_dir, f'distributions {n}.png'))
 plt.savefig(os.path.join(res_dir, f'distributions {n}.svg'))
 plt.close('all')
 
+if 'group' in results.columns:
+    for group in results.group.unique():
+        name = 'distributions'
+        idx = results['group'] == group
+        fig, ax = plt.subplots(figsize=(10,10))
+        try:
+            sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins)
+            fig.legend()
+            ax.set_ylabel('normalised frequency')
+            ax.set_xlabel('CumCh1')
+            plt.savefig(os.path.join(res_dir, f'{name} {group} {n}.png'))
+            plt.savefig(os.path.join(res_dir, f'{name} {group} {n}.svg'))
+            plt.close('all')
+        except np.linalg.LinAlgError:
+            print(f'a plot for {group} could not be generated, too few values')
+
 last_bins = np.zeros(args.bins)
 diff = []
 simulations=[]
