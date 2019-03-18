@@ -13,6 +13,13 @@ required_arguments.add_argument('--pickle-dir', '-pd',
                                 required=True)
 required_arguments.add_argument('--estimator-step', '-m',
                                 help='number of simulations to consider for the plot', required=True, type=int)
+required_arguments.add_argument('--bins', '-b',
+                                help='number of bins to consider for the distribution plot', required=True, 
+                                default=20, type=int)
+required_arguments.add_argument('--mean', help='if incuded, the plot shows the mean', action='store_true')
+required_arguments.add_argument('--std', help='if incuded, the plot shows the standard deviation', action='store_true')
+required_arguments.add_argument('--bars', help='if incuded, the plot shows the histogram bars', action='store_true')
+
 args = aparser.parse_args()
 
 res_dir = os.path.realpath(args.pickle_dir)
@@ -38,20 +45,24 @@ cumchs = results.CumCh1.values
 n = args.estimator_step
 fig, ax = plt.subplots(figsize=(10,10))
 for i in range(cumchs.shape[0]//n):
-    sns.distplot(cumchs[:n*i+n], ax=ax, hist=False, label=f'{i*n+n}', bins=20)
-#fig.legend()
+    sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins)
+    if args.mean:
+        ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ {i*n+n}', linestyle='--', color='r')
+    if args.std:
+        ax.axvline(cumchs[:n*i+n].mean() + cumchs[:n*i+n].std(), label=f'$1\sigma$ {i*n+n}', linestyle='--', color='g')
+        ax.axvline(cumchs[:n*i+n].mean() - cumchs[:n*i+n].std(), label=f'$-1\sigma$ {i*n+n}', linestyle='--', color='g')
+fig.legend()
 ax.set_ylabel('normalised frequency')
 ax.set_xlabel('CumCh1')
 plt.savefig(os.path.join(res_dir, f'distributions {n}.png'))
 plt.savefig(os.path.join(res_dir, f'distributions {n}.svg'))
 plt.close('all')
 
-bins = 20
-last_bins = np.zeros(bins)
+last_bins = np.zeros(args.bins)
 diff = []
 simulations=[]
 for i in range(cumchs.shape[0]//n):
-    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=bins)
+    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
     #print(i, np.sum(np.abs(hist**2 - last_bins**2)))
     diff.append(np.mean(np.square(hist - last_bins)))
     simulations.append(cumchs[:n*i+n].shape)
@@ -66,11 +77,11 @@ plt.savefig(os.path.join(res_dir, f'convergence_{n}.svg'))
 
 plt.close('all')
 
-last_bins = np.zeros(bins)
+last_bins = np.zeros(args.bins)
 diff = []
 simulations=[]
 for i in range(cumchs.shape[0]//n):
-    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=bins)
+    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
     #print(i, np.sum(np.abs(hist**2 - last_bins**2)))
     diff.append(np.mean(np.square(hist - last_bins)))
     simulations.append(cumchs[:n*i+n].shape)

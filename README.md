@@ -83,7 +83,11 @@ here the `m` parameter is the number of simulations to consider for the generati
 When running the pipeline in `montecarlo` mode, it makes sense to split the computation in many batches. To make the analysis of many thousans of simulations manageable, a script that looks at how the ditribution of the `CumCh1` variable evolves is provided. To run it, use the following command:
 
 ```bash
-python distribution_plots.py -pd G:\programming\hydrus\results -m 10
+python distribution_plots.py -pd G:\programming\hydrus\results -m 100 -b 20 --mean --std --bars
 ```
 
-The first argument points to the directory which should contain all the `results.pkl` generated from many runs of the `aggregate_results.py` script. 
+The first argument points to the directory which should contain all the `results.pkl` generated from many runs of the `aggregate_results.py` script. The `m` argument indicates how many simulations to consider to estimate each distribution. Argument `b` indicates how many bins to use in the histogram. `--mean`, `--std`, and `--bars` configure whether the mean, standard deviation and the histograms will be displayed in the distribution plot.
+
+
+
+
