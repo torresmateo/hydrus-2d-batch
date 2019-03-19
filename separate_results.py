@@ -16,7 +16,7 @@ for e, res in enumerate(os.listdir(res_dir)):
         print(f'reading file: {res}')
         results = pd.read_pickle(os.path.join(res_dir,res))
         if 'group' in results.columns:
-            print(f'creating excel file for variable {group}')
             for group in results.group.unique():
+                print(f'creating excel file for variable {group}')
                 idx = results['group'] == group
                 results[idx].to_excel(os.path.join(res_dir, f'results {e} {group}.xlsx'))

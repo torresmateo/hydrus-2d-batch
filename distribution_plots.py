@@ -48,7 +48,10 @@ cumchs = results.CumCh1.values
 n = args.estimator_step
 fig, ax = plt.subplots(figsize=(10,10))
 for i in range(cumchs.shape[0]//n):
-    sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins)
+    if args.bins:
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins)
+    else:
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}')
     if args.mean:
         ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ {i*n+n}', linestyle='--', color='r')
     if args.std:
