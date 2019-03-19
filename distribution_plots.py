@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
+colours = sns.color_palette().as_hex()
+curr_col = 0
+
 
 aparser = argparse.ArgumentParser()
 required_arguments = aparser.add_argument_group('required arguments')
@@ -49,17 +52,18 @@ n = args.estimator_step
 fig, ax = plt.subplots(figsize=(10,10))
 for i in range(cumchs.shape[0]//n):
     if args.bins:
-        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins)
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins, color=colours[curr_col])
     else:
-        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}')
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', color=colours[curr_col])
     if args.mean:
-        ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ = {cumchs[:n*i+n].mean()}', linestyle='--', color='r')
+        ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ = {cumchs[:n*i+n].mean():.2f}', linestyle='--', color=colours[curr_col])
     if args.std:
         ax.axvline(cumchs[:n*i+n].mean() + cumchs[:n*i+n].std(), 
-            label=f'$1\sigma$ = {cumchs[:n*i+n].mean() + cumchs[:n*i+n].std()}', linestyle='--', color='g')
+            label=f'$1\sigma$ = {cumchs[:n*i+n].mean() + cumchs[:n*i+n].std():.2f}', linestyle='--', color=colours[curr_col])
         ax.axvline(cumchs[:n*i+n].mean() - cumchs[:n*i+n].std(), 
-            label=f'$-1\sigma$ = {cumchs[:n*i+n].mean() - cumchs[:n*i+n].std()}', linestyle='--', color='g')
-fig.legend()
+            label=f'$-1\sigma$ = {cumchs[:n*i+n].mean() - cumchs[:n*i+n].std():.2f}', linestyle='--', color=colours[curr_col])
+    curr_col = (curr_col + 1) % len(colours)
+ax.legend()
 ax.set_ylabel('normalised frequency')
 ax.set_xlabel('CumCh1')
 plt.savefig(os.path.join(res_dir, f'distributions {n}.png'))
@@ -73,18 +77,18 @@ if 'group' in results.columns:
         fig, ax = plt.subplots(figsize=(10,10))
         try:
             if args.bins:
-                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins)
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins, color=colours[curr_col])
             else:
-                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}')
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', color=colours[curr_col])
             if args.mean:
-                ax.axvline(results[idx].CumCh1.values.mean(), label=f'$\mu$ = {results[idx].CumCh1.values.mean()}', linestyle='--', color='r')
+                ax.axvline(results[idx].CumCh1.values.mean(), label=f'$\mu$ = {results[idx].CumCh1.values.mean():.2f}', linestyle='--', color=colours[curr_col])
             if args.std:
                 ax.axvline(results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std(), 
-                    label=f'$1\sigma$ = {results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std()}', linestyle='--', color='g')
+                    label=f'$1\sigma$ = {results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std():.2f}', linestyle='--', color=colours[curr_col])
                 ax.axvline(results[idx].CumCh1.values.mean() - cumchs[:n*i+n].std(), 
-                    label=f'$-1\sigma$ = {results[idx].CumCh1.values.mean() - results[idx].CumCh1.values.std()}', linestyle='--', color='g')
+                    label=f'$-1\sigma$ = {results[idx].CumCh1.values.mean() - results[idx].CumCh1.values.std():.2f}', linestyle='--', color=colours[curr_col])
 
-            fig.legend()
+            ax.legend()
             ax.set_ylabel('normalised frequency')
             ax.set_xlabel('CumCh1')
             plt.savefig(os.path.join(res_dir, f'{name} {group} {n}.png'))
@@ -115,7 +119,6 @@ ax.set_ylabel('mean squared error to previous distribution')
 ax.set_xlabel('number of simulations considered')
 plt.savefig(os.path.join(res_dir, f'convergence_{n}.png'))
 plt.savefig(os.path.join(res_dir, f'convergence_{n}.svg'))
-
 plt.close('all')
 
 last_bins = np.zeros(args.bins)
