@@ -85,7 +85,7 @@ if 'group' in results.columns:
             if args.std:
                 ax.axvline(results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std(), 
                     label=f'$1\sigma$ = {results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std():.2f}', linestyle='--', color=colours[curr_col])
-                ax.axvline(results[idx].CumCh1.values.mean() - cumchs[:n*i+n].std(), 
+                ax.axvline(results[idx].CumCh1.values.mean() - results[idx].CumCh1.values.std(), 
                     label=f'$-1\sigma$ = {results[idx].CumCh1.values.mean() - results[idx].CumCh1.values.std():.2f}', linestyle='--', color=colours[curr_col])
 
             ax.legend()
