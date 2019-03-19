@@ -78,7 +78,7 @@ here the `m` parameter is the number of simulations to consider for the generati
 * `results.xlsx` The same data in Microsoft Excel format.
 * `res.mat` The same data in MATLAB format. Please refer to the `plots.m` script for examples on how to use this data.
 
-## analyse many results
+### analyse many results
 
 When running the pipeline in `montecarlo` mode, it makes sense to split the computation in many batches. To make the analysis of many thousans of simulations manageable, a script that looks at how the ditribution of the `CumCh1` variable evolves is provided. To run it, use the following command:
 
@@ -88,6 +88,12 @@ python distribution_plots.py -pd G:\programming\hydrus\results -m 100 -b 20 --me
 
 The first argument points to the directory which should contain all the `results.pkl` generated from many runs of the `aggregate_results.py` script. The `m` argument indicates how many simulations to consider to estimate each distribution. Argument `b` indicates how many bins to use in the histogram. `--mean`, `--std`, and `--bars` configure whether the mean, standard deviation and the histograms will be displayed in the distribution plot.
 
+### separate results
 
+When running a large number of simulations it makes sense to separate them according to the studied variable, this can be achieved when using the `discrete` sampling method. To generate one excel file per variable, simply run:
 
+```bash
+python separate_results.py -pd G:\programming\hydrus\results
+```
 
+As is the case for the `distribution_plots.py` script, the `pd` argument points to the directory in which one or more `results.pkl` files are present. If the file is the result of an aggregation of configurations done with `montecarlo` mode, these will be ignored. Note that a collection of excel files will be generated per `results.pkl` file.
