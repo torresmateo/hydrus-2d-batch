@@ -53,10 +53,12 @@ for i in range(cumchs.shape[0]//n):
     else:
         sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}')
     if args.mean:
-        ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ {i*n+n}', linestyle='--', color='r')
+        ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ = {cumchs[:n*i+n].mean()}', linestyle='--', color='r')
     if args.std:
-        ax.axvline(cumchs[:n*i+n].mean() + cumchs[:n*i+n].std(), label=f'$1\sigma$ {i*n+n}', linestyle='--', color='g')
-        ax.axvline(cumchs[:n*i+n].mean() - cumchs[:n*i+n].std(), label=f'$-1\sigma$ {i*n+n}', linestyle='--', color='g')
+        ax.axvline(cumchs[:n*i+n].mean() + cumchs[:n*i+n].std(), 
+            label=f'$1\sigma$ = {cumchs[:n*i+n].mean() + cumchs[:n*i+n].std()}', linestyle='--', color='g')
+        ax.axvline(cumchs[:n*i+n].mean() - cumchs[:n*i+n].std(), 
+            label=f'$-1\sigma$ = {cumchs[:n*i+n].mean() - cumchs[:n*i+n].std()}', linestyle='--', color='g')
 fig.legend()
 ax.set_ylabel('normalised frequency')
 ax.set_xlabel('CumCh1')
@@ -70,7 +72,18 @@ if 'group' in results.columns:
         idx = results['group'] == group
         fig, ax = plt.subplots(figsize=(10,10))
         try:
-            sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins)
+            if args.bins:
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins)
+            else:
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}')
+            if args.mean:
+                ax.axvline(results[idx].CumCh1.values.mean(), label=f'$\mu$ = {results[idx].CumCh1.values.mean()}', linestyle='--', color='r')
+            if args.std:
+                ax.axvline(results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std(), 
+                    label=f'$1\sigma$ = {results[idx].CumCh1.values.mean() + results[idx].CumCh1.values.std()}', linestyle='--', color='g')
+                ax.axvline(results[idx].CumCh1.values.mean() - cumchs[:n*i+n].std(), 
+                    label=f'$-1\sigma$ = {results[idx].CumCh1.values.mean() - results[idx].CumCh1.values.std()}', linestyle='--', color='g')
+
             fig.legend()
             ax.set_ylabel('normalised frequency')
             ax.set_xlabel('CumCh1')
@@ -80,11 +93,17 @@ if 'group' in results.columns:
         except np.linalg.LinAlgError:
             print(f'a plot for {group} could not be generated, too few values')
 
+
+
 last_bins = np.zeros(args.bins)
 diff = []
 simulations=[]
 for i in range(cumchs.shape[0]//n):
-    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
+    if args.bins:
+        hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
+    else:
+        hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True)
+        last_bins = np.zeros(hist.shape[0])
     #print(i, np.sum(np.abs(hist**2 - last_bins**2)))
     diff.append(np.mean(np.square(hist - last_bins)))
     simulations.append(cumchs[:n*i+n].shape)
@@ -103,7 +122,11 @@ last_bins = np.zeros(args.bins)
 diff = []
 simulations=[]
 for i in range(cumchs.shape[0]//n):
-    hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
+    if args.bins:
+        hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True, bins=args.bins)
+    else:
+        hist, bin_edges = np.histogram(cumchs[:n*i+n], density=True)
+        last_bins = np.zeros(hist.shape[0])
     #print(i, np.sum(np.abs(hist**2 - last_bins**2)))
     diff.append(np.mean(np.square(hist - last_bins)))
     simulations.append(cumchs[:n*i+n].shape)
