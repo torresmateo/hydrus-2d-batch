@@ -22,6 +22,9 @@ required_arguments.add_argument('--bars', help='if incuded, the plot shows the h
 
 args = aparser.parse_args()
 
+if args.bins == -1:
+    args.bins = None
+
 res_dir = os.path.realpath(args.pickle_dir)
 
 results = None
