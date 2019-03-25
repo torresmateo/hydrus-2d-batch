@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 Playground*
+playground*
 
 # C extensions
 *.so

@@ -19,6 +19,9 @@ required_arguments.add_argument('--estimator-step', '-m',
 required_arguments.add_argument('--bins', '-b',
                                 help='number of bins to consider for the distribution plot', required=True, 
                                 default=20, type=int)
+required_arguments.add_argument('--alpha', '-a',
+                                help='opacity given to the histogram', 
+                                default=0.5, type=float)
 required_arguments.add_argument('--mean', help='if incuded, the plot shows the mean', action='store_true')
 required_arguments.add_argument('--std', help='if incuded, the plot shows the standard deviation', action='store_true')
 required_arguments.add_argument('--bars', help='if incuded, the plot shows the histogram bars', action='store_true')
@@ -52,9 +55,9 @@ n = args.estimator_step
 fig, ax = plt.subplots(figsize=(10,10))
 for i in range(cumchs.shape[0]//n):
     if args.bins:
-        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins, color=colours[curr_col])
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', bins=args.bins, color=colours[curr_col], hist_kws=dict(alpha=args.alpha))
     else:
-        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', color=colours[curr_col])
+        sns.distplot(cumchs[:n*i+n], ax=ax, hist=args.bars, label=f'{i*n+n}', color=colours[curr_col], hist_kws=dict(alpha=args.alpha))
     if args.mean:
         ax.axvline(cumchs[:n*i+n].mean(), label=f'$\mu$ = {cumchs[:n*i+n].mean():.2f}', linestyle='--', color=colours[curr_col])
     if args.std:
@@ -77,9 +80,9 @@ if 'group' in results.columns:
         fig, ax = plt.subplots(figsize=(10,10))
         try:
             if args.bins:
-                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins, color=colours[curr_col])
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', bins=args.bins, color=colours[curr_col], hist_kws=dict(alpha=args.alpha))
             else:
-                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', color=colours[curr_col])
+                sns.distplot(results[idx].CumCh1.values, ax=ax, hist=args.bars, label=f'{group}', color=colours[curr_col], hist_kws=dict(alpha=args.alpha))
             if args.mean:
                 ax.axvline(results[idx].CumCh1.values.mean(), label=f'$\mu$ = {results[idx].CumCh1.values.mean():.2f}', linestyle='--', color=colours[curr_col])
             if args.std:
