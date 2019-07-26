@@ -6,6 +6,8 @@ import argparse
 import os
 import json
 
+
+from SALib.sample import saltelli
 from collections import defaultdict
 
 aparser = argparse.ArgumentParser()
@@ -19,8 +21,11 @@ required_arguments.add_argument('--mode', '-m',
                                 help='The mode in which the ranges file will be interpreted, this is either \'montecarlo\''
                                      ' or \'discrete\', defaults to montecarlo. When montecarlo is selected, the -n '
                                      'argument is mandatory', required=True, default='montecarlo', 
-                                choices=['montecarlo', 'discrete'])
-required_arguments.add_argument('--num-simulations', '-n', help='number of Monte Carlo simulations to run', required=False, 
+                                choices=['montecarlo', 'discrete', 'saltelli'])
+required_arguments.add_argument('--num-simulations', '-n', 
+                                help='number of Monte Carlo or Saltelli simulations to run. For Saltelli it should be the N in '
+                                     'the formula that will make the total number of simulations be equal to N*(D+2)', 
+                                required=False, 
                                 type=int)
 args = aparser.parse_args()
 
@@ -33,9 +38,9 @@ print(proj_dir)
 
 def create_configuration(configuration_values, config_dir):
     if os.name == 'nt':
-        os.system(f'xcopy /E {os.path.join(proj_dir,"CROMO","PRE")} {config_dir}\\ > nul')
+        os.system(f'xcopy /E {os.path.join(proj_dir,"CROMO","REACTION")} {config_dir}\\ > nul')
     else:
-        os.system(f'cp -rf {os.path.join(proj_dir, "CROMO", "PRE")} {config_dir}')
+        os.system(f'cp -rf {os.path.join(proj_dir, "CROMO", "REACTION")} {config_dir}')
     
     selector = open(os.path.join(config_dir, 'SELECTOR.IN'), 'w')
     selector.write(template['CROMO']['selector'].format(**configuration))
@@ -73,9 +78,27 @@ defaults = {}
 for _, r in ranges.iterrows():
     if args.mode == 'discrete':
         data[r.variable] = list(np.arange(r.start, r.stop, r.step))
-    else:
+    elif args.mode == 'montecarlo':
         data[r.variable] = np.random.uniform(r.start, r.stop, args.num_simulations)
     defaults[r.variable] = r.default
+
+if args.mode == 'saltelli':
+    problem = {
+        'num_vars': 10,
+        'names': ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h', 'ths', 'Ks', 'l'],
+        'bounds': [[ranges[ranges.variable == supported_variables[0]].start, ranges[ranges.variable == supported_variables[0]].stop],
+                   [ranges[ranges.variable == supported_variables[1]].start, ranges[ranges.variable == supported_variables[1]].stop],
+                   [ranges[ranges.variable == supported_variables[2]].start, ranges[ranges.variable == supported_variables[2]].stop],
+                   [ranges[ranges.variable == supported_variables[3]].start, ranges[ranges.variable == supported_variables[3]].stop],
+                   [ranges[ranges.variable == supported_variables[4]].start, ranges[ranges.variable == supported_variables[4]].stop],
+                   [ranges[ranges.variable == supported_variables[5]].start, ranges[ranges.variable == supported_variables[5]].stop],
+                   [ranges[ranges.variable == supported_variables[6]].start, ranges[ranges.variable == supported_variables[6]].stop],
+                   [ranges[ranges.variable == supported_variables[7]].start, ranges[ranges.variable == supported_variables[7]].stop],
+                   [ranges[ranges.variable == supported_variables[8]].start, ranges[ranges.variable == supported_variables[8]].stop],
+                   [ranges[ranges.variable == supported_variables[9]].start, ranges[ranges.variable == supported_variables[9]].stop],
+                   ]
+    }
+    
 
 template = {
     'CROMO': {
@@ -98,6 +121,14 @@ if args.mode == 'discrete':
             create_configuration(configuration, config_dir)
             configuration_details[var][f'configuration_{e}'] = configuration.copy()
             e += 1
+elif args.mode == 'saltelli':
+    configurations = saltelli.sample(problem, args.num_simulations, calc_second_order=False)
+    for e, conf in enumerate(configurations):
+        configuration = {v:k for v,k in zip(supported_variables, conf)}
+        print(f'Writing configuration {e}')
+        config_dir = os.path.join(out_dir, f'configuration_{e}')
+        create_configuration(configuration, config_dir)
+        configuration_details[var][f'configuration_{e}'] = configuration.copy()
 else:
     for e in range(args.num_simulations):
         configuration = {}
