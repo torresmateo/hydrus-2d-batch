@@ -86,16 +86,16 @@ if args.mode == 'saltelli':
     problem = {
         'num_vars': 10,
         'names': ['Bulk_d', 'DisperL', 'DisperT', 'DifW', 'SnkL1', 'Conc', 'h', 'ths', 'Ks', 'l'],
-        'bounds': [[ranges[ranges.variable == supported_variables[0]].start, ranges[ranges.variable == supported_variables[0]].stop],
-                   [ranges[ranges.variable == supported_variables[1]].start, ranges[ranges.variable == supported_variables[1]].stop],
-                   [ranges[ranges.variable == supported_variables[2]].start, ranges[ranges.variable == supported_variables[2]].stop],
-                   [ranges[ranges.variable == supported_variables[3]].start, ranges[ranges.variable == supported_variables[3]].stop],
-                   [ranges[ranges.variable == supported_variables[4]].start, ranges[ranges.variable == supported_variables[4]].stop],
-                   [ranges[ranges.variable == supported_variables[5]].start, ranges[ranges.variable == supported_variables[5]].stop],
-                   [ranges[ranges.variable == supported_variables[6]].start, ranges[ranges.variable == supported_variables[6]].stop],
-                   [ranges[ranges.variable == supported_variables[7]].start, ranges[ranges.variable == supported_variables[7]].stop],
-                   [ranges[ranges.variable == supported_variables[8]].start, ranges[ranges.variable == supported_variables[8]].stop],
-                   [ranges[ranges.variable == supported_variables[9]].start, ranges[ranges.variable == supported_variables[9]].stop],
+        'bounds': [[ranges[ranges.variable == supported_variables[0]].start.values[0], ranges[ranges.variable == supported_variables[0]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[1]].start.values[0], ranges[ranges.variable == supported_variables[1]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[2]].start.values[0], ranges[ranges.variable == supported_variables[2]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[3]].start.values[0], ranges[ranges.variable == supported_variables[3]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[4]].start.values[0], ranges[ranges.variable == supported_variables[4]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[5]].start.values[0], ranges[ranges.variable == supported_variables[5]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[6]].start.values[0], ranges[ranges.variable == supported_variables[6]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[7]].start.values[0], ranges[ranges.variable == supported_variables[7]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[8]].start.values[0], ranges[ranges.variable == supported_variables[8]].stop.values[0]],
+                   [ranges[ranges.variable == supported_variables[9]].start.values[0], ranges[ranges.variable == supported_variables[9]].stop.values[0]],
                    ]
     }
     
@@ -128,7 +128,7 @@ elif args.mode == 'saltelli':
         print(f'Writing configuration {e}')
         config_dir = os.path.join(out_dir, f'configuration_{e}')
         create_configuration(configuration, config_dir)
-        configuration_details[var][f'configuration_{e}'] = configuration.copy()
+        configuration_details[f'configuration_{e}'] = configuration.copy()
 else:
     for e in range(args.num_simulations):
         configuration = {}
