@@ -102,8 +102,8 @@ if args.mode == 'saltelli':
 
 template = {
     'CROMO': {
-        'selector': open(os.path.join(proj_dir, 'CROMO', 'PRE', 'SELECTOR.IN')).read(),
-        'domain': open(os.path.join(proj_dir, 'CROMO', 'PRE', 'DOMAIN.DAT')).read()
+        'selector': open(os.path.join(proj_dir, 'CROMO', 'REACTION', 'SELECTOR.IN')).read(),
+        'domain': open(os.path.join(proj_dir, 'CROMO', 'REACTION', 'DOMAIN.DAT')).read()
     }
 }
 
